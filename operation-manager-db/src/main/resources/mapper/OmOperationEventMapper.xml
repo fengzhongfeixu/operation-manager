@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sugon.gsq.om.db.mapper.OmOperationEventMapper">
+  <resultMap id="BaseResultMap" type="com.sugon.gsq.om.db.entity.OmOperationEvent">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="level" jdbcType="CHAR" property="level" />
+    <result column="service" jdbcType="VARCHAR" property="service" />
+    <result column="createtime" jdbcType="TIMESTAMP" property="createtime" />
+    <result column="outdate" jdbcType="BIT" property="outdate" />
+    <result column="description" jdbcType="LONGVARCHAR" property="description" />
+  </resultMap>
+</mapper>

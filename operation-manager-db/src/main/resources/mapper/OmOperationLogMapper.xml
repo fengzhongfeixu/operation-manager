@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sugon.gsq.om.db.mapper.OmOperationLogMapper">
+  <resultMap id="BaseResultMap" type="com.sugon.gsq.om.db.entity.OmOperationLog">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <result column="hostname" jdbcType="VARCHAR" property="hostname" />
+    <result column="status" jdbcType="VARCHAR" property="status" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
+    <result column="operation" jdbcType="VARCHAR" property="operation" />
+    <result column="content" jdbcType="LONGVARCHAR" property="content" />
+  </resultMap>
+</mapper>

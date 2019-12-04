@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sugon.gsq.om.db.mapper.OmBlueprintProcessMapper">
+  <resultMap id="BaseResultMap" type="com.sugon.gsq.om.db.entity.OmBlueprintProcess">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="hostname" jdbcType="VARCHAR" property="hostname" />
+    <result column="processname" jdbcType="VARCHAR" property="processname" />
+    <result column="version" jdbcType="VARCHAR" property="version" />
+  </resultMap>
+</mapper>

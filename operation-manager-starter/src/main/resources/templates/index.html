@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>服务器信息</title>
+    <link href="../static/css/index.css" rel="stylesheet">
+    <style>
+        .el-row {
+            margin-bottom: 20px;
+        }
+
+        .el-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .sysFile {
+            margin-bottom: 5px;
+        }
+
+        .sysFile:last-child {
+            margin-bottom: 0;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <el-container>
+        <el-header>
+            <el-button @click="_initSockJs" type="primary" :disabled="isConnected">手动连接</el-button>
+            <el-button @click="_destroySockJs" type="danger" :disabled="!isConnected">断开连接</el-button>
+        </el-header>
+        <el-main>
+            <el-row>
+                <el-col :span="24">
+                    <el-card>
+                        <div slot="header">
+                            <span>蓝图信息看过来</span>
+                        </div>
+                        <el-table size="small" border :data="server.log" style="width: 100%">
+                            <el-table-column prop="key" min-width="auto" label="节点">
+                            </el-table-column>
+                            <el-table-column prop="value" label="操作">
+                            </el-table-column>
+                        </el-table>
+                    </el-card>
+                </el-col>
+            </el-row>
+        </el-main>
+    </el-container>
+</div>
+</body>
+<script src="../static/js/sockjs.min.js"></script>
+<script src="../static/js/stomp.js"></script>
+<script src="../static/js/vue.min.js"></script>
+<script src="../static/js/index.js"></script>
+<script src="../static/js/axios.min.js"></script>
+<script>
+    const wsHost = "http://localhost:8080/notification";
+    const wsTopic = "/topic/stepShow";
+
+    const app = new Vue({
+        el: '#app',
+        data: function () {
+            return {
+                isConnected: false,
+                stompClient: {},
+                socket: {},
+                server: {
+                    log: []
+                }
+            }
+        },
+        methods: {
+            _getServerInfo() {
+                axios.get('/ready')
+                    .then((response) => {
+                        this.server = response.data
+                    });
+            },
+            _initSockJs() {
+                this._getServerInfo();
+                this.socket = new SockJS(wsHost);
+                this.stompClient = Stomp.over(this.socket);
+
+                this.stompClient.connect({}, (frame) => {
+                    console.log('websocket连接成功:' + frame);
+                    this.isConnected = true;
+                    this.$message('websocket服务器连接成功');
+
+                    // 另外再注册一下消息推送
+                    this.stompClient.subscribe(wsTopic, (response) => {
+                        this.server.log.push(JSON.parse(response.body));
+                    });
+                });
+            },
+            _destroySockJs() {
+                if (this.stompClient != null) {
+                    this.stompClient.disconnect();
+                    this.socket.onclose;
+                    this.socket.close();
+                    this.stompClient = {};
+                    this.socket = {};
+                    this.isConnected = false;
+                    this.server.log = [];
+                }
+                console.log('websocket断开成功！');
+                this.$message.error('websocket断开成功！');
+            }
+        },
+        mounted() {
+            this._initSockJs();
+        },
+        beforeDestroy() {
+            this._destroySockJs();
+        }
+
+    })
+</script>
+</html>

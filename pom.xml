@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.0.6.RELEASE</version>
+        <relativePath/>
+    </parent>
+
+    <groupId>com.sugon.gsq</groupId>
+    <artifactId>operation-manager</artifactId>
+    <packaging>pom</packaging>
+    <version>RELEASE-4.0.5</version>
+
+    <modules>
+        <module>operation-manager-common</module>
+        <module>operation-manager-master</module>
+        <module>operation-manager-agent</module>
+        <module>operation-manager-starter</module>
+        <module>operation-manager-api</module>
+        <module>operation-manager-db</module>
+        <module>operation-manager-proxy</module>
+    </modules>
+
+    <properties>
+        <java.version>1.8</java.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    </properties>
+
+    <repositories>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- Json处理工具 -->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>fastjson</artifactId>
+                <version>1.2.59</version>
+            </dependency>
+            <!-- 流处理工具 -->
+            <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>2.4</version>
+            </dependency>
+            <!-- Http请求工具 -->
+            <dependency>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>httpclient</artifactId>
+                <version>4.5.9</version>
+            </dependency>
+            <dependency>
+                <groupId>org.littleshoot</groupId>
+                <artifactId>littleproxy</artifactId>
+                <version>1.1.1</version>
+            </dependency>
+            <dependency>
+                <groupId>com.sun.jersey.contribs</groupId>
+                <artifactId>jersey-apache-client</artifactId>
+                <version>1.15</version>
+            </dependency>
+            <!-- 实体类处理工具 -->
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>1.18.8</version>
+            </dependency>
+            <!-- 数据源工具 -->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>druid-spring-boot-starter</artifactId>
+                <version>1.1.9</version>
+            </dependency>
+            <!-- mybatis应用 -->
+            <dependency>
+                <groupId>org.mybatis.spring.boot</groupId>
+                <artifactId>mybatis-spring-boot-starter</artifactId>
+                <version>1.3.1</version>
+            </dependency>
+            <!-- 数据库表映射 -->
+            <dependency>
+                <groupId>tk.mybatis</groupId>
+                <artifactId>mapper-spring-boot-starter</artifactId>
+                <version>2.0.3-beta1</version>
+            </dependency>
+            <!-- swagger仿postman -->
+            <dependency>
+                <groupId>com.battcn</groupId>
+                <artifactId>swagger-spring-boot-starter</artifactId>
+                <version>2.1.2-RELEASE</version>
+            </dependency>
+            <!-- 分页插件 -->
+            <dependency>
+                <groupId>com.github.pagehelper</groupId>
+                <artifactId>pagehelper-spring-boot-starter</artifactId>
+                <version>1.2.12</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.mybatis.spring.boot</groupId>
+                        <artifactId>mybatis-spring-boot-starter</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <!-- xml解析处理工具 -->
+            <dependency>
+                <groupId>dom4j</groupId>
+                <artifactId>dom4j</artifactId>
+                <version>1.6.1</version>
+            </dependency>
+            <!-- 网络传输框架 -->
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-all</artifactId>
+                <version>4.1.34.Final</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.protobuf</groupId>
+                <artifactId>protobuf-java</artifactId>
+                <version>3.5.1</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.protobuf</groupId>
+                <artifactId>protobuf-java-util</artifactId>
+                <version>3.5.1</version>
+            </dependency>
+            <!-- http代理框架 -->
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>3.7</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.anthonynsimon</groupId>
+                <artifactId>jurl</artifactId>
+                <version>v0.4.1</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.code.gson</groupId>
+                <artifactId>gson</artifactId>
+                <version>2.8.5</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>27.0.1-jre</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-collections4</artifactId>
+                <version>4.3</version>
+            </dependency>
+            <dependency>
+                <groupId>com.squareup.okhttp3</groupId>
+                <artifactId>okhttp</artifactId>
+                <version>3.13.1</version>
+            </dependency>
+            <!-- cpu、内存各种统计 -->
+            <dependency>
+                <groupId>com.github.oshi</groupId>
+                <artifactId>oshi-core</artifactId>
+                <version>3.9.1</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-all</artifactId>
+                <version>5.0.0</version>
+            </dependency>
+            <!-- 忘了这是干嘛的 -->
+            <dependency>
+                <groupId>com.dyuproject.protostuff</groupId>
+                <artifactId>protostuff-runtime</artifactId>
+                <version>1.1.3</version>
+            </dependency>
+            <dependency>
+                <groupId>com.dyuproject.protostuff</groupId>
+                <artifactId>protostuff-core</artifactId>
+                <version>1.1.3</version>
+            </dependency>
+            <dependency>
+                <groupId>org.objenesis</groupId>
+                <artifactId>objenesis</artifactId>
+                <version>2.5</version>
+            </dependency>
+            <!-- swagger接口测试API -->
+            <dependency>
+                <groupId>io.springfox</groupId>
+                <artifactId>springfox-swagger2</artifactId>
+                <version>2.9.2</version>
+            </dependency>
+            <dependency>
+                <groupId>io.springfox</groupId>
+                <artifactId>springfox-swagger-ui</artifactId>
+                <version>2.9.2</version>
+            </dependency>
+            <!-- 自导自演 -->
+            <dependency>
+                <groupId>com.sugon.gsq</groupId>
+                <artifactId>operation-manager-common</artifactId>
+                <version>RELEASE-4.0.5</version>
+            </dependency>
+            <dependency>
+                <groupId>com.sugon.gsq</groupId>
+                <artifactId>operation-manager-api</artifactId>
+                <version>RELEASE-4.0.5</version>
+            </dependency>
+            <dependency>
+                <groupId>com.sugon.gsq</groupId>
+                <artifactId>operation-manager-master</artifactId>
+                <version>RELEASE-4.0.5</version>
+            </dependency>
+            <dependency>
+                <groupId>com.sugon.gsq</groupId>
+                <artifactId>operation-manager-agent</artifactId>
+                <version>RELEASE-4.0.5</version>
+            </dependency>
+            <dependency>
+                <groupId>com.sugon.gsq</groupId>
+                <artifactId>operation-manager-db</artifactId>
+                <version>RELEASE-4.0.5</version>
+            </dependency>
+            <dependency>
+                <groupId>com.sugon.gsq</groupId>
+                <artifactId>operation-manager-proxy</artifactId>
+                <version>RELEASE-4.0.5</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+</project>

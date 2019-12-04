@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sugon.gsq.om.db.mapper.OmProcessInfoMapper">
+  <resultMap id="BaseResultMap" type="com.sugon.gsq.om.db.entity.OmProcessInfo">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="process" jdbcType="VARCHAR" property="process" />
+    <result column="service" jdbcType="VARCHAR" property="service" />
+    <result column="hostname" jdbcType="VARCHAR" property="hostname" />
+    <result column="pid" jdbcType="VARCHAR" property="pid" />
+    <result column="pname" jdbcType="VARCHAR" property="pname" />
+    <result column="status" jdbcType="CHAR" property="status" />
+    <result column="same" jdbcType="CHAR" property="same" />
+  </resultMap>
+</mapper>

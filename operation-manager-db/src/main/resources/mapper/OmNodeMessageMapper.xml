@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sugon.gsq.om.db.mapper.OmNodeMessageMapper">
+  <resultMap id="BaseResultMap" type="com.sugon.gsq.om.db.entity.OmNodeMessage">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <result column="hostname" jdbcType="VARCHAR" property="hostname" />
+    <result column="ip" jdbcType="VARCHAR" property="ip" />
+    <result column="port" jdbcType="VARCHAR" property="port" />
+    <result column="role" jdbcType="VARCHAR" property="role" />
+    <result column="pid" jdbcType="VARCHAR" property="pid" />
+    <result column="username" jdbcType="VARCHAR" property="username" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="system" jdbcType="VARCHAR" property="system" />
+    <result column="version" jdbcType="VARCHAR" property="version" />
+    <result column="netread" jdbcType="VARCHAR" property="netread" />
+    <result column="netwrite" jdbcType="VARCHAR" property="netwrite" />
+    <result column="diskusage" jdbcType="VARCHAR" property="diskusage" />
+    <result column="diskused" jdbcType="VARCHAR" property="diskused" />
+    <result column="memoryusage" jdbcType="VARCHAR" property="memoryusage" />
+    <result column="memoryused" jdbcType="VARCHAR" property="memoryused" />
+    <result column="cpuusage" jdbcType="VARCHAR" property="cpuusage" />
+    <result column="status" jdbcType="VARCHAR" property="status" />
+  </resultMap>
+</mapper>

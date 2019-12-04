@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sugon.gsq.om.db.mapper.OmConfigInfoMapper">
+  <resultMap id="BaseResultMap" type="com.sugon.gsq.om.db.entity.OmConfigInfo">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="k" jdbcType="VARCHAR" property="k" />
+    <result column="belong" jdbcType="VARCHAR" property="belong" />
+    <result column="scope" jdbcType="VARCHAR" property="scope" />
+    <result column="version" jdbcType="INTEGER" property="version" />
+    <result column="v" jdbcType="LONGVARCHAR" property="v" />
+  </resultMap>
+</mapper>

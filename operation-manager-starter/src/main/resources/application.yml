@@ -1,0 +1,105 @@
+server:
+  master:
+    port: 8080
+  agent:
+    port: 8081
+  servlet:
+    session:
+      timeout: 1800
+
+mapper:
+  identity: MYSQL
+  mappers: com.sugon.gsq.om.db.util.MyMapper
+  not-empty: false
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.sugon.gsq.om.db.entity
+
+pagehelper:
+  helperDialect: mysql
+  params: count=countSql
+  reasonable: true
+  supportMethodsArguments: true
+
+spring:
+  application:
+    name: operation-manager-starter
+  freemarker:
+    cache: false
+    request-context-attribute: request
+  jackson:
+    time-zone: GMT+8
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/operation_manager?useUnicode=true&characterEncoding=UTF-8&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=Asia/Shanghai&useSSL=false
+    driver-class-name: com.mysql.jdbc.Driver
+    username: root
+    password: admin1234@sugon
+    druid:
+      initial-size: 1
+      max-active: 20
+      min-idle: 1
+      test-on-borrow: true
+
+  thymeleaf:
+    mode: HTML
+    encoding: UTF-8
+    servlet:
+      content-type: text/html
+    cache: false
+
+  swagger:
+    enabled: true
+    title: OM应用自动化部署系统
+    description: 接口API调试专用
+    version: RELEASE-4.0.5
+    base-package: com.sugon.gsq.om.controller
+    contact:
+      name: gaoshq
+      email: gaoshq@sugon.com
+      url: http://sugon.com
+    security:
+      filter-plugin: false
+      username: admin
+      password: admin
+    global-response-messages:
+      GET[0]:
+        code: 400
+        message: Bad Request，提交的参数有瑕疵
+      GET[1]:
+        code: 401
+        message: Unauthorized，你没有权限访问
+      GET[2]:
+        code: 403
+        message: Forbidden，服务器不想理你
+      GET[3]:
+        code: 404
+        message: NOT FOUND，你要的东西不存在
+      GET[4]:
+        code: 500
+        message: ERROR，服务器的节操碎了
+      POST[0]:
+        code: 400
+        message: Bad Request，提交的参数有瑕疵
+      POST[1]:
+        code: 401
+        message: Unauthorized，你没有权限访问
+      POST[2]:
+        code: 403
+        message: Forbidden，服务器不想理你
+      POST[3]:
+        code: 404
+        message: Not Found，你要的东西不存在
+      POST[4]:
+        code: 500
+        message: ERROR，服务器的节操碎了
+
+logging:
+  level:
+    com.sugon.gsq.om.db.mapper: DEBUG
+    root: info
+    tk:
+      mybatis:
+        springboot:
+          mapper: INFO
