@@ -22,8 +22,6 @@ import java.text.SimpleDateFormat;
 @Api(tags = "RELEASE-3.4.0", description = "事件管理", value = "事件管理")
 public class EventController {
 
-    private static final ThreadLocal<SimpleDateFormat> threadLocal = new ThreadLocal<>();
-
     @Autowired
     private EventService eventService;
 

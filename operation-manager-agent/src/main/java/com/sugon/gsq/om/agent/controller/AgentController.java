@@ -13,6 +13,8 @@ import com.sugon.gsq.om.db.entity.OmBlueprintConf;
 import com.sugon.gsq.om.common.constant.Constant;
 import com.sugon.gsq.om.model.PairModel;
 import com.sugon.gsq.om.tools.ApiUtil;
+import io.swagger.annotations.Api;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,8 +32,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * Author: Administrator
  * Date: 2019/8/28 19:52
  */
+@Slf4j
 @RestController
 @RequestMapping("/agent")
+@Api(tags = "RELEASE-2.1.0", description = "代理应用接口", value = "服务器代理")
 public class AgentController {
 
     @Autowired
