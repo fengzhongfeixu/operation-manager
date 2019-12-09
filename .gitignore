@@ -8,6 +8,7 @@
 out
 gen
 logs/*
+*/target/
 
 # Package Files #
 *.class
