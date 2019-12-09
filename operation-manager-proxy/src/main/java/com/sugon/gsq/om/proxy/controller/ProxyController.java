@@ -1,11 +1,10 @@
 package com.sugon.gsq.om.proxy.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.sugon.gsq.om.common.constant.UrlMapping;
 import com.sugon.gsq.om.common.utils.HttpUtil;
-import com.sugon.gsq.om.constant.UrlMapping;
 import com.sugon.gsq.om.model.ServerModel;
 import com.sugon.gsq.om.proxy.service.HttpProxyService;
-import com.sugon.gsq.om.proxy.utils.RestTemplateFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -13,15 +12,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
-
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.*;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /*
  * ClassName: MasterController

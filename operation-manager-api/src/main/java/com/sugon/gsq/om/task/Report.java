@@ -1,10 +1,14 @@
 package com.sugon.gsq.om.task;
 
-import com.sugon.gsq.om.constant.Constant;
+import com.sugon.gsq.om.common.constant.Constant;
+import com.sugon.gsq.om.common.utils.CfgUtil;
+import com.sugon.gsq.om.common.utils.CommonUtil;
+import com.sugon.gsq.om.common.utils.XmlUtil;
 import com.sugon.gsq.om.db.entity.OmConfigInfo;
 import com.sugon.gsq.om.db.entity.OmMonitorMessage;
 import com.sugon.gsq.om.db.entity.OmOperationEvent;
 import com.sugon.gsq.om.db.entity.OmProcessInfo;
+import com.sugon.gsq.om.db.mapper.OmConfigInfoMapper;
 import com.sugon.gsq.om.db.mapper.OmMonitorMessageMapper;
 import com.sugon.gsq.om.db.mapper.OmOperationEventMapper;
 import com.sugon.gsq.om.db.mapper.OmProcessInfoMapper;
@@ -16,13 +20,12 @@ import org.springframework.stereotype.Component;
 import tk.mybatis.mapper.weekend.Weekend;
 import tk.mybatis.mapper.weekend.WeekendCriteria;
 
+import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 /*
  * ClassName: Report
@@ -41,10 +44,10 @@ public class Report {
     private OmProcessInfoMapper processInfoMapper;
 
     @Autowired
-    private ServicesService servicesService;
+    private OmOperationEventMapper operationEventMapper;
 
     @Autowired
-    private OmOperationEventMapper operationEventMapper;
+    private OmConfigInfoMapper configInfoMapper;
 
     //上报监控信息
     @Scheduled(cron = "0 0,15,30,45 * * * ?")
@@ -172,8 +175,71 @@ public class Report {
         if(Constant.ROLE.equals(Constant.MASTER)){
             return;
         }
-        List<OmConfigInfo> configs = servicesService.getConfigs();
-        servicesService.updateConfigOnDisk(configs);
+        Weekend<OmConfigInfo> weekend = Weekend.of(OmConfigInfo.class);
+        WeekendCriteria<OmConfigInfo, Object> criteria = weekend.weekendCriteria();
+        criteria.orEqualTo("scope",Constant.LOCALHOST);
+        criteria.orEqualTo("scope","public");
+        List<OmConfigInfo> configs = configInfoMapper.selectByExample(weekend);
+        //开始同步配置文件
+        Map<String,String> zoo = new HashMap<>();
+        Map<String,String> core = new HashMap<>();
+        Map<String,String> hdfs = new HashMap<>();
+        Map<String,String> yarn = new HashMap<>();
+        Map<String,String> mapred = new HashMap<>();
+        Map<String,String> hive = new HashMap<>();
+        Map<String,String> spark_hive = new HashMap<>();
+        Map<String,String> hbase = new HashMap<>();
+        Map<String,String> kafka = new HashMap<>();
+        for(OmConfigInfo config : configs){
+            if(config.getBelong().equals("zoo")){
+                zoo.put(config.getK(),config.getV());
+            } else if(config.getBelong().equals("core-site")){
+                core.put(config.getK(),config.getV());
+            } else if(config.getBelong().equals("hdfs-site")){
+                hdfs.put(config.getK(),config.getV());
+            } else if(config.getBelong().equals("yarn-site")){
+                yarn.put(config.getK(),config.getV());
+            } else if(config.getBelong().equals("mapred-site")){
+                mapred.put(config.getK(),config.getV());
+            } else if(config.getBelong().equals("hive-site")){
+                hive.put(config.getK(),config.getV());
+            } else if(config.getBelong().equals("spark-hive-site")){
+                spark_hive.put(config.getK(),config.getV());
+            } else if(config.getBelong().equals("hbase-site")){
+                hbase.put(config.getK(),config.getV());
+            } else if(config.getBelong().equals("kafka-server")){
+                kafka.put(config.getK(),config.getV());
+            }
+        }
+        CfgUtil.updateCfg(zoo,
+                Constant.ZOOKEEPER_HOME + File.separator + "conf" + File.separator + "zoo.cfg");
+        XmlUtil.updateXml(core,
+                Constant.HADOOP_HOME + File.separator + "etc" + File.separator + "hadoop" + File.separator + "core-site.xml");
+        XmlUtil.updateXml(hdfs,
+                Constant.HADOOP_HOME + File.separator + "etc" + File.separator + "hadoop" + File.separator + "hdfs-site.xml");
+        XmlUtil.updateXml(yarn,
+                Constant.HADOOP_HOME + File.separator + "etc" + File.separator + "hadoop" + File.separator + "yarn-site.xml");
+        XmlUtil.updateXml(mapred,
+                Constant.HADOOP_HOME + File.separator + "etc" + File.separator + "hadoop" + File.separator + "mapred-site.xml");
+        XmlUtil.updateXml(hive,
+                Constant.HIVE_HOME + File.separator + "conf" + File.separator + "hive-site.xml");
+        XmlUtil.updateXml(spark_hive,
+                Constant.SPARK_HOME+ File.separator + "conf" + File.separator + "hive-site.xml");
+        //复制spark所需的hadoop配置文件
+        CommonUtil.copyFile(Constant.HADOOP_HOME + File.separator + "etc" + File.separator + "hadoop" + File.separator + "core-site.xml"
+                ,Constant.SPARK_HOME + File.separator + "conf" + File.separator + "core-site.xml");
+        CommonUtil.copyFile(Constant.HADOOP_HOME + File.separator + "etc" + File.separator + "hadoop" + File.separator + "hdfs-site.xml"
+                ,Constant.SPARK_HOME + File.separator + "conf" + File.separator + "hdfs-site.xml");
+        XmlUtil.updateXml(hbase,
+                Constant.HBASE_HOME + File.separator + "conf" + File.separator + "hbase-site.xml");
+        //复制hbase所需的hadoop配置文件
+        CommonUtil.copyFile(Constant.HADOOP_HOME + File.separator + "etc" + File.separator + "hadoop" + File.separator + "core-site.xml"
+                ,Constant.HBASE_HOME + File.separator + "conf" + File.separator + "core-site.xml");
+        CommonUtil.copyFile(Constant.HADOOP_HOME + File.separator + "etc" + File.separator + "hadoop" + File.separator + "hdfs-site.xml"
+                ,Constant.HBASE_HOME + File.separator + "conf" + File.separator + "hdfs-site.xml");
+        //配置kafka
+        CfgUtil.updateCfg(kafka,
+                Constant.KAFKA_HOME + File.separator + "config" + File.separator + "server.properties");
     }
 
 }

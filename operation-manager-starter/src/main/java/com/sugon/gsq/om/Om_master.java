@@ -1,7 +1,7 @@
 package com.sugon.gsq.om;
 
 import com.sugon.gsq.om.master.service.MasterNodeService;
-import com.sugon.gsq.om.constant.Constant;
+import com.sugon.gsq.om.common.constant.Constant;
 import com.sugon.gsq.om.db.entity.OmNodeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;

@@ -48,10 +48,7 @@
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.sugon.gsq</groupId>
-            <artifactId>operation-manager-api</artifactId>
-        </dependency>
+        <!-- 自导自演 -->
         <dependency>
             <groupId>com.sugon.gsq</groupId>
             <artifactId>operation-manager-db</artifactId>

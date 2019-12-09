@@ -1,4 +1,4 @@
-package com.sugon.gsq.om.constant;
+package com.sugon.gsq.om.common.constant;
 
 /*
  * ClassName: Orders
@@ -7,7 +7,7 @@ package com.sugon.gsq.om.constant;
  */
 public class Orders {
     //主节点下发命令码表
-    public static final String GET_CONFIGS = "getConfigs";
+    public static final String GET_CONFIGS = "gcf";
     public static final String START_ZOOKEEPER_SERVER = "szs";
     public static final String START_HDFS_JOURNALNODE = "shj";
     public static final String START_HDFS_SECONDARYNAMENODE = "shs";

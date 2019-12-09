@@ -1,7 +1,7 @@
 package com.sugon.gsq.om.services;
 
 import com.google.common.collect.Lists;
-import com.sugon.gsq.om.constant.Constant;
+import com.sugon.gsq.om.common.constant.Constant;
 import com.sugon.gsq.om.db.entity.OmBlueprintProcess;
 import com.sugon.gsq.om.db.entity.OmMonitorMessage;
 import com.sugon.gsq.om.db.entity.OmProcessInfo;

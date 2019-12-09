@@ -1,10 +1,14 @@
 package com.sugon.gsq.om.services;
 
+import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import com.sugon.gsq.om.constant.Constant;
-import com.sugon.gsq.om.constant.UrlMapping;
+import com.sugon.gsq.om.common.constant.Constant;
+import com.sugon.gsq.om.common.constant.UrlMapping;
+import com.sugon.gsq.om.common.utils.CfgUtil;
+import com.sugon.gsq.om.common.utils.CommonUtil;
+import com.sugon.gsq.om.common.utils.HttpUtil;
+import com.sugon.gsq.om.common.utils.XmlUtil;
 import com.sugon.gsq.om.db.entity.*;
 import com.sugon.gsq.om.db.mapper.*;
 import com.sugon.gsq.om.entity.server.ConfigEntity;
@@ -22,7 +26,6 @@ import tk.mybatis.mapper.weekend.WeekendCriteria;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicReference;
 
 /*
  * ClassName: ServicesService
@@ -54,33 +57,29 @@ public class ServicesService {
         for(OmProcessInfo omProcessInfo : omProcessInfos){
             String appName = omProcessInfo.getService();
             String processName = omProcessInfo.getProcess();
-            //进程运行才能进行统计
-            if(omProcessInfo.getStatus().equals("running")){
-                for(ServerEntity serverEntity : serverEntities){
-                    if(serverEntity.getName().equals(appName)){
-                        if(serverEntity.getRole().containsKey(processName)){
-                            Integer newNum = serverEntity.getRole().get(processName) + 1;
-                            serverEntity.getRole().put(processName,newNum);
-                        } else {
-                            serverEntity.getRole().put(processName,1);
-                        }
-                        continue loop;
+            //进程运行状态不考虑
+            for(ServerEntity serverEntity : serverEntities){
+                if(serverEntity.getName().equals(appName)){
+                    if(serverEntity.getRole().containsKey(processName)){
+                        Integer newNum = serverEntity.getRole().get(processName) + 1;
+                        serverEntity.getRole().put(processName,newNum);
+                    } else {
+                        serverEntity.getRole().put(processName,1);
                     }
+                    continue loop;
                 }
-                //没有该Hadoop组件
-                Map<String,Integer> processes = new HashMap<>();
-                processes.put(processName,1);
-                serverEntities.add(
-                        new ServerEntity()
-                                .setName(appName)
-                                .setStatus(startOrNot(appName))
-                                .setHealth(health(appName))
-                                .setConfig(syOrNot(appName))
-                                .setRole(processes)
-                );
-            } else {
-                //进程是stop的状态,抛出警告
             }
+            //没有该Hadoop组件
+            Map<String,Integer> processes = new HashMap<>();
+            processes.put(processName,1);
+            serverEntities.add(
+                    new ServerEntity()
+                            .setName(appName)
+                            .setStatus(startOrNot(appName))
+                            .setHealth(health(appName))
+                            .setConfig(syOrNot(appName))
+                            .setRole(processes)
+            );
         }
         return serverEntities;
     }
@@ -222,77 +221,6 @@ public class ServicesService {
         return Constant.STATUS_SUCCESS;
     }
 
-    public List<OmConfigInfo> getConfigs(){
-        Weekend<OmConfigInfo> weekend = Weekend.of(OmConfigInfo.class);
-        WeekendCriteria<OmConfigInfo, Object> criteria = weekend.weekendCriteria();
-        criteria.orEqualTo("scope",Constant.LOCALHOST);
-        criteria.orEqualTo("scope","public");
-        List<OmConfigInfo> configs = configInfoMapper.selectByExample(weekend);
-        return configs;
-    }
-
-    public void updateConfigOnDisk(List<OmConfigInfo> configs) throws IOException {
-        Map<String,String> zoo = new HashMap<>();
-        Map<String,String> core = new HashMap<>();
-        Map<String,String> hdfs = new HashMap<>();
-        Map<String,String> yarn = new HashMap<>();
-        Map<String,String> mapred = new HashMap<>();
-        Map<String,String> hive = new HashMap<>();
-        Map<String,String> spark_hive = new HashMap<>();
-        Map<String,String> hbase = new HashMap<>();
-        Map<String,String> kafka = new HashMap<>();
-        for(OmConfigInfo config : configs){
-            if(config.getBelong().equals("zoo")){
-                zoo.put(config.getK(),config.getV());
-            } else if(config.getBelong().equals("core-site")){
-                core.put(config.getK(),config.getV());
-            } else if(config.getBelong().equals("hdfs-site")){
-                hdfs.put(config.getK(),config.getV());
-            } else if(config.getBelong().equals("yarn-site")){
-                yarn.put(config.getK(),config.getV());
-            } else if(config.getBelong().equals("mapred-site")){
-                mapred.put(config.getK(),config.getV());
-            } else if(config.getBelong().equals("hive-site")){
-                hive.put(config.getK(),config.getV());
-            } else if(config.getBelong().equals("spark-hive-site")){
-                spark_hive.put(config.getK(),config.getV());
-            } else if(config.getBelong().equals("hbase-site")){
-                hbase.put(config.getK(),config.getV());
-            } else if(config.getBelong().equals("kafka-server")){
-                kafka.put(config.getK(),config.getV());
-            }
-        }
-        CfgUtil.updateCfg(zoo,
-                Constant.ZOOKEEPER_HOME + File.separator + "conf" + File.separator + "zoo.cfg");
-        XmlUtil.updateXml(core,
-                Constant.HADOOP_HOME + File.separator + "etc" + File.separator + "hadoop" + File.separator + "core-site.xml");
-        XmlUtil.updateXml(hdfs,
-                Constant.HADOOP_HOME + File.separator + "etc" + File.separator + "hadoop" + File.separator + "hdfs-site.xml");
-        XmlUtil.updateXml(yarn,
-                Constant.HADOOP_HOME + File.separator + "etc" + File.separator + "hadoop" + File.separator + "yarn-site.xml");
-        XmlUtil.updateXml(mapred,
-                Constant.HADOOP_HOME + File.separator + "etc" + File.separator + "hadoop" + File.separator + "mapred-site.xml");
-        XmlUtil.updateXml(hive,
-                Constant.HIVE_HOME + File.separator + "conf" + File.separator + "hive-site.xml");
-        XmlUtil.updateXml(spark_hive,
-                Constant.SPARK_HOME+ File.separator + "conf" + File.separator + "hive-site.xml");
-        //复制spark所需的hadoop配置文件
-        CommonUtil.copyFile(Constant.HADOOP_HOME + File.separator + "etc" + File.separator + "hadoop" + File.separator + "core-site.xml"
-                ,Constant.SPARK_HOME + File.separator + "conf" + File.separator + "core-site.xml");
-        CommonUtil.copyFile(Constant.HADOOP_HOME + File.separator + "etc" + File.separator + "hadoop" + File.separator + "hdfs-site.xml"
-                ,Constant.SPARK_HOME + File.separator + "conf" + File.separator + "hdfs-site.xml");
-        XmlUtil.updateXml(hbase,
-                Constant.HBASE_HOME + File.separator + "conf" + File.separator + "hbase-site.xml");
-        //复制hbase所需的hadoop配置文件
-        CommonUtil.copyFile(Constant.HADOOP_HOME + File.separator + "etc" + File.separator + "hadoop" + File.separator + "core-site.xml"
-                ,Constant.HBASE_HOME + File.separator + "conf" + File.separator + "core-site.xml");
-        CommonUtil.copyFile(Constant.HADOOP_HOME + File.separator + "etc" + File.separator + "hadoop" + File.separator + "hdfs-site.xml"
-                ,Constant.HBASE_HOME + File.separator + "conf" + File.separator + "hdfs-site.xml");
-        //配置kafka
-        CfgUtil.updateCfg(kafka,
-                Constant.KAFKA_HOME + File.separator + "config" + File.separator + "server.properties");
-    }
-
     public String excommandProcess(String process, String order){
         Weekend<OmProcessInfo> weekend = Weekend.of(OmProcessInfo.class);
         WeekendCriteria<OmProcessInfo, Object> criteria = weekend.weekendCriteria();
@@ -308,9 +236,25 @@ public class ServicesService {
             List<OmNodeMessage> nodeMessages = nodeMessageMapper.selectByExample(weekend_);
             OmNodeMessage slave = nodeMessages.get(0);
             //向agent传达命令
-            OmOperationLog operationLog = HttpUtil.excommand(String.format(UrlMapping.REQUEST_COMMAND,slave.getIp(),slave.getPort())
+            Map<String, Object> response = HttpUtil.sendPost(String.format(UrlMapping.REQUEST_COMMAND,slave.getIp(),slave.getPort())
                     ,new NoticeModel().setTitle(order).setMessage(process).toString());
-            operationLog.setHostname(processInfo.getHostname());
+            OmOperationLog operationLog = null;
+            if((Integer)response.get("code") == 200){
+                PairModel agentResponse = JSONObject.parseObject(response.get("content").toString(), PairModel.class);
+                operationLog = new OmOperationLog()
+                        .setCode(response.get("code").toString())
+                        .setStatus(Constant.STATUS_SUCCESS)
+                        .setHostname(processInfo.getHostname())
+                        .setOperation(agentResponse.getKey())
+                        .setContent(agentResponse.getValue());
+            } else {
+                operationLog = new OmOperationLog()
+                        .setCode(response.get("code").toString())
+                        .setStatus(Constant.STATUS_FAULT)
+                        .setHostname(processInfo.getHostname())
+                        .setOperation(process + "进程" + order + "操作失败")
+                        .setContent("fault");
+            }
             operationLogMapper.insert(operationLog);
             //修改配置文件同步状态
             processInfoMapper.updateByPrimaryKey(processInfo.setSame("yes"));
@@ -336,9 +280,25 @@ public class ServicesService {
             List<OmNodeMessage> nodeMessages = nodeMessageMapper.selectByExample(weekend_);
             OmNodeMessage slave = nodeMessages.get(0);
             //向agent传达命令
-            OmOperationLog operationLog = HttpUtil.excommand(String.format(UrlMapping.REQUEST_COMMAND,slave.getIp(),slave.getPort())
+            Map<String, Object> response = HttpUtil.sendPost(String.format(UrlMapping.REQUEST_COMMAND,slave.getIp(),slave.getPort())
                     ,new NoticeModel().setTitle(order).setMessage(processInfo.getProcess()).toString());
-            operationLog.setHostname(processInfo.getHostname());
+            OmOperationLog operationLog = null;
+            if((Integer)response.get("code") == 200){
+                PairModel agentResponse = JSONObject.parseObject(response.get("content").toString(), PairModel.class);
+                operationLog = new OmOperationLog()
+                        .setCode(response.get("code").toString())
+                        .setStatus(Constant.STATUS_SUCCESS)
+                        .setHostname(processInfo.getHostname())
+                        .setOperation(agentResponse.getKey())
+                        .setContent(agentResponse.getValue());
+            } else {
+                operationLog = new OmOperationLog()
+                        .setCode(response.get("code").toString())
+                        .setStatus(Constant.STATUS_FAULT)
+                        .setHostname(processInfo.getHostname())
+                        .setOperation(service + "服务" + order + "操作失败")
+                        .setContent("fault");
+            }
             operationLogMapper.insert(operationLog);
             //修改配置文件同步状态
             processInfoMapper.updateByPrimaryKey(processInfo.setSame("yes"));

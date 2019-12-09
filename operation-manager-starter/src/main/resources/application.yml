@@ -24,12 +24,15 @@ pagehelper:
 
 spring:
   application:
-    name: operation-manager-starter
+    name: operation-manager
   freemarker:
     cache: false
     request-context-attribute: request
   jackson:
     time-zone: GMT+8
+  output:
+    ansi:
+      enabled: ALWAYS
 
   datasource:
     url: jdbc:mysql://localhost:3306/operation_manager?useUnicode=true&characterEncoding=UTF-8&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=Asia/Shanghai&useSSL=false

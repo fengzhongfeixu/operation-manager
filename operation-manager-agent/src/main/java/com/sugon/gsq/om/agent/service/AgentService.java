@@ -1,9 +1,8 @@
 package com.sugon.gsq.om.agent.service;
 
-import com.alibaba.fastjson.JSONArray;
 import com.sugon.gsq.om.common.utils.*;
 import com.sugon.gsq.om.db.entity.OmBlueprintConf;
-import com.sugon.gsq.om.constant.Constant;
+import com.sugon.gsq.om.common.constant.Constant;
 import org.springframework.stereotype.Service;
 
 import java.io.*;

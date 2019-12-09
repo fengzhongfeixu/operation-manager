@@ -4,7 +4,7 @@ import com.sugon.gsq.om.db.entity.OmBlueprintConf;
 import com.sugon.gsq.om.db.entity.OmBlueprintProcess;
 import com.sugon.gsq.om.db.mapper.OmBlueprintConfMapper;
 import com.sugon.gsq.om.db.mapper.OmBlueprintProcessMapper;
-import com.sugon.gsq.om.constant.Constant;
+import com.sugon.gsq.om.common.constant.Constant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.weekend.Weekend;

@@ -1,19 +1,21 @@
 package com.sugon.gsq.om.master.controller;
 
+import com.alibaba.fastjson.JSONObject;
+import com.sugon.gsq.om.common.constant.Orders;
+import com.sugon.gsq.om.common.constant.UrlMapping;
 import com.sugon.gsq.om.common.utils.HttpUtil;
 import com.sugon.gsq.om.db.entity.OmNodeMessage;
 import com.sugon.gsq.om.db.entity.OmOperationLog;
 import com.sugon.gsq.om.master.service.MasterBlueprintService;
 import com.sugon.gsq.om.master.service.MasterLogService;
 import com.sugon.gsq.om.master.service.MasterNodeService;
-import com.sugon.gsq.om.constant.Constant;
-import com.sugon.gsq.om.constant.Orders;
-import com.sugon.gsq.om.constant.UrlMapping;
+import com.sugon.gsq.om.common.constant.Constant;
 import com.sugon.gsq.om.master.service.MasterWebsocketServer;
 import com.sugon.gsq.om.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.Map;
 
 
 /*
@@ -218,16 +220,33 @@ public class MasterController {
         boolean flag = false;
         //5次失败视为下发命令失败
         for(int i=0;i<5;i++){
-            OmOperationLog ool = HttpUtil.sendPost(url,
+            Map<String, Object> response = HttpUtil.sendPost(url,
                     new NoticeModel()
                             .setTitle(order)
                             .toString());
-            ool.setHostname(hostname);
-            masterLogService.insertLog(ool);
-            if(ool.getStatus().equals(Constant.STATUS_SUCCESS)){
+            //获取请求状态
+            Integer httpCode = (Integer) response.get("code");
+            OmOperationLog omOperationLog = new OmOperationLog()
+                    .setCode(httpCode.toString())
+                    .setHostname(hostname);
+            //解析response信息并入库
+            if(httpCode == 200){
+                PairModel pairModel = JSONObject.parseObject(response.get("content").toString(), PairModel.class);
+                omOperationLog
+                        .setStatus(Constant.STATUS_SUCCESS)
+                        .setOperation(pairModel.getKey())
+                        .setContent(pairModel.getKey());
+                masterLogService.insertLog(omOperationLog);
                 flag = true;
                 break;
+            } else {
+                omOperationLog
+                        .setStatus(Constant.STATUS_FAULT)
+                        .setOperation("http请求失败")
+                        .setContent(response.get("content").toString());
+                masterLogService.insertLog(omOperationLog);
             }
+
         }
         if(!flag){
             masterLogService.insertLog(new OmOperationLog()

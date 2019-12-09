@@ -2,7 +2,7 @@ package com.sugon.gsq.om.controller;
 
 import com.battcn.boot.swagger.model.DataType;
 import com.battcn.boot.swagger.model.ParamType;
-import com.sugon.gsq.om.constant.Constant;
+import com.sugon.gsq.om.common.constant.Constant;
 import com.sugon.gsq.om.db.entity.OmConfigInfo;
 import com.sugon.gsq.om.entity.monitor.SoServerInforEntity;
 import com.sugon.gsq.om.entity.server.ConfigEntity;

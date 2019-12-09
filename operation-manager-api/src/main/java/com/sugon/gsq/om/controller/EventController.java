@@ -1,25 +1,15 @@
 package com.sugon.gsq.om.controller;
 
-import com.battcn.boot.swagger.model.DataType;
-import com.battcn.boot.swagger.model.ParamType;
-import com.sugon.gsq.om.constant.Constant;
-import com.sugon.gsq.om.db.entity.OmConfigInfo;
-import com.sugon.gsq.om.entity.server.ConfigEntity;
-import com.sugon.gsq.om.entity.server.ProcessEntity;
-import com.sugon.gsq.om.entity.server.ServerEntity;
+import com.sugon.gsq.om.common.constant.Constant;
 import com.sugon.gsq.om.model.ResponseModel;
 import com.sugon.gsq.om.services.EventService;
-import com.sugon.gsq.om.services.ServicesService;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.SimpleDateFormat;
-import java.util.List;
 
 /*
  * ClassName: ServicesController

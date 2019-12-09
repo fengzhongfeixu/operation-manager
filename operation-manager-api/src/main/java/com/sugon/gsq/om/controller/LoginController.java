@@ -2,22 +2,20 @@ package com.sugon.gsq.om.controller;
 
 import com.battcn.boot.swagger.model.DataType;
 import com.battcn.boot.swagger.model.ParamType;
-import com.sugon.gsq.om.constant.Constant;
+import com.sugon.gsq.om.common.constant.Constant;
+import com.sugon.gsq.om.common.utils.MD5Util;
 import com.sugon.gsq.om.db.entity.OmSysUser;
 import com.sugon.gsq.om.db.mapper.OmSysUserMapper;
 import com.sugon.gsq.om.model.ResponseModel;
-import com.sugon.gsq.om.tools.MD5Util;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 /*
  * ClassName: LoginController

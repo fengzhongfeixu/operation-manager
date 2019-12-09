@@ -1,6 +1,6 @@
 package com.sugon.gsq.om.agent.service;
 
-import com.sugon.gsq.om.constant.Constant;
+import com.sugon.gsq.om.common.constant.Constant;
 import com.sugon.gsq.om.db.entity.OmOperationEvent;
 import com.sugon.gsq.om.db.entity.OmProcessInfo;
 import com.sugon.gsq.om.db.mapper.OmOperationEventMapper;

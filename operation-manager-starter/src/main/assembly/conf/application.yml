@@ -24,12 +24,15 @@ pagehelper:
 
 spring:
   application:
-    name: operation-manager-starter
+    name: operation-manager
   freemarker:
     cache: false
     request-context-attribute: request
   jackson:
     time-zone: GMT+8
+  output:
+    ansi:
+      enabled: DETECT
 
   datasource:
     url: jdbc:mysql://slave01:3306/operation_manager?useUnicode=true&characterEncoding=UTF-8&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=Asia/Shanghai&useSSL=false
@@ -63,41 +66,10 @@ spring:
       filter-plugin: false
       username: admin
       password: admin
-    global-response-messages:
-      GET[0]:
-        code: 400
-        message: Bad Request，提交的参数有瑕疵
-      GET[1]:
-        code: 401
-        message: Unauthorized，你没有权限访问
-      GET[2]:
-        code: 403
-        message: Forbidden，服务器不想理你
-      GET[3]:
-        code: 404
-        message: NOT FOUND，你要的东西不存在
-      GET[4]:
-        code: 500
-        message: ERROR，服务器的节操碎了
-      POST[0]:
-        code: 400
-        message: Bad Request，提交的参数有瑕疵
-      POST[1]:
-        code: 401
-        message: Unauthorized，你没有权限访问
-      POST[2]:
-        code: 403
-        message: Forbidden，服务器不想理你
-      POST[3]:
-        code: 404
-        message: Not Found，你要的东西不存在
-      POST[4]:
-        code: 500
-        message: ERROR，服务器的节操碎了
 
 logging:
   level:
-    com.sugon.gsq.om.db.mapper: DEBUG
+    com.sugon.gsq.om.db.mapper: INFO
     root: info
     tk:
       mybatis:

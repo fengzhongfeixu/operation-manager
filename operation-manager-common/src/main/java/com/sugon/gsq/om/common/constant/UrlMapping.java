@@ -1,4 +1,4 @@
-package com.sugon.gsq.om.constant;
+package com.sugon.gsq.om.common.constant;
 
 /*
  * ClassName: UrlMapping

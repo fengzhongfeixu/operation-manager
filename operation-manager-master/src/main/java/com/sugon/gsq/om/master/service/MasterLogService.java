@@ -1,6 +1,6 @@
 package com.sugon.gsq.om.master.service;
 
-import com.sugon.gsq.om.constant.Constant;
+import com.sugon.gsq.om.common.constant.Constant;
 import com.sugon.gsq.om.db.entity.OmNodeMessage;
 import com.sugon.gsq.om.db.entity.OmOperationLog;
 import com.sugon.gsq.om.db.mapper.OmOperationLogMapper;

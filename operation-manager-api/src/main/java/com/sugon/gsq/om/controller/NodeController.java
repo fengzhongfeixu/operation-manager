@@ -1,6 +1,6 @@
 package com.sugon.gsq.om.controller;
 
-import com.sugon.gsq.om.constant.Constant;
+import com.sugon.gsq.om.common.constant.Constant;
 import com.sugon.gsq.om.model.ResponseModel;
 import com.sugon.gsq.om.services.EventService;
 import com.sugon.gsq.om.services.NodeService;

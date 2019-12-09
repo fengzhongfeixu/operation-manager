@@ -1,20 +1,16 @@
 package com.sugon.gsq.om.tools;
 
 import cn.hutool.core.util.NumberUtil;
-import com.google.common.collect.Lists;
-import com.sugon.gsq.om.constant.Constant;
+import com.sugon.gsq.om.common.constant.Constant;
 import oshi.SystemInfo;
 import oshi.hardware.*;
 import oshi.software.os.FileSystem;
 import oshi.software.os.OSFileStore;
-import oshi.software.os.OSProcess;
 import oshi.software.os.OperatingSystem;
 import oshi.util.FormatUtil;
 
 import java.io.*;
 import java.math.BigDecimal;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.UUID;
 
 /*

@@ -1,9 +1,5 @@
 package com.sugon.gsq.om.common.utils;
 
-import com.alibaba.fastjson.JSONObject;
-import com.sugon.gsq.om.constant.Constant;
-import com.sugon.gsq.om.db.entity.OmOperationLog;
-import com.sugon.gsq.om.model.PairModel;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -18,6 +14,8 @@ import org.apache.http.util.EntityUtils;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
+import java.util.HashMap;
+import java.util.Map;
 
 /*
  * ClassName: HttpUtil
@@ -28,10 +26,19 @@ public class HttpUtil {
 
     private HttpUtil(){}
 
-    public static OmOperationLog sendPost(String url, String message) {
+    /**
+     * 返回code响应码和请求内容
+     * @param url
+     * @param message
+     * @return
+     */
+    public static Map<String, Object> sendPost(String url, String message) {
+        Map<String, Object> result = new HashMap<>();
+        CloseableHttpResponse response = null;
+        CloseableHttpClient httpClient = null;
         try{
             HttpPost post = new HttpPost(url);
-            CloseableHttpClient httpClient = HttpClients.createDefault();
+            httpClient = HttpClients.createDefault();
 
             StringEntity se = new StringEntity(message, Charset.forName("utf-8"));
             se.setContentEncoding("utf-8");
@@ -41,31 +48,31 @@ public class HttpUtil {
             post.setHeader(new BasicHeader("Accept", "application/json; charset=utf-8"));
             post.setEntity(se);
 
-            CloseableHttpResponse response = httpClient.execute(post);
-            int statusCode = response.getStatusLine().getStatusCode();
-            if(statusCode != 200){
-                return new OmOperationLog()
-                        .setStatus(Constant.STATUS_FAULT)
-                        .setCode(statusCode + "")
-                        .setOperation("Unimportance")
-                        .setContent("http请求失败");
-            }
-            String result = entityToString(response.getEntity());
-            PairModel agentResponse = JSONObject.parseObject(result, PairModel.class);
-            response.close();
-            httpClient.close();
-            return new OmOperationLog()
-                    .setStatus(Constant.STATUS_SUCCESS)
-                    .setCode("200")
-                    .setOperation(agentResponse.getKey())
-                    .setContent(agentResponse.getValue());
+            response = httpClient.execute(post);
+            Integer statusCode = response.getStatusLine().getStatusCode();
+            //拼装返回值
+            result.put("code", statusCode);
+            result.put("content",entityToString(response.getEntity()));
+
         } catch (Exception e){
-            return new OmOperationLog()
-                    .setStatus(Constant.STATUS_FAULT)
-                    .setCode("500")
-                    .setOperation("Unimportance")
-                    .setContent(e.getMessage());
+            //http请求错误
+            result.put("code", new Integer(5000));
+            result.put("content", e.getMessage());
+        } finally {
+            try{
+                if(response != null){
+                    response.close();
+                }
+                if(httpClient != null){
+                    httpClient.close();
+                }
+            } catch (IOException e) {
+                //关闭请求流错误
+                result.put("code", result.get("code") != null ? ((Integer)result.get("code") + 10000) : 10000);
+                result.put("content", e.getMessage());
+            }
         }
+        return result;
     }
 
     public static String sendGet(String url) throws IOException {
