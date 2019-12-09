@@ -7,6 +7,7 @@ import com.sugon.gsq.om.agent.service.AgentService;
 import com.sugon.gsq.om.common.constant.Orders;
 import com.sugon.gsq.om.common.utils.CommonUtil;
 import com.sugon.gsq.om.db.entity.OmProcessInfo;
+import com.sugon.gsq.om.model.CommandModel;
 import com.sugon.gsq.om.model.NoticeModel;
 import com.sugon.gsq.om.db.entity.OmBlueprintConf;
 import com.sugon.gsq.om.common.constant.Constant;
@@ -228,9 +229,9 @@ public class AgentController {
     }
 
     @PostMapping("/command.do")
-    public PairModel command(@RequestBody NoticeModel notice) throws IOException, InterruptedException {
-        String command = notice.getTitle();
-        String process = notice.getMessage();
+    public PairModel command(@RequestBody CommandModel commandModel) throws IOException, InterruptedException {
+        String command = commandModel.getCommand();
+        String process = commandModel.getProcess();
 
         PairModel result = new PairModel();
         String pid = null;

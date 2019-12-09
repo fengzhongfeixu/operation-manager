@@ -14,6 +14,7 @@ import com.sugon.gsq.om.db.mapper.*;
 import com.sugon.gsq.om.entity.server.ConfigEntity;
 import com.sugon.gsq.om.entity.server.ProcessEntity;
 import com.sugon.gsq.om.entity.server.ServerEntity;
+import com.sugon.gsq.om.model.CommandModel;
 import com.sugon.gsq.om.model.NoticeModel;
 import com.sugon.gsq.om.model.PairModel;
 import com.sugon.gsq.om.tools.*;
@@ -188,7 +189,7 @@ public class ServicesService {
             if(config.getId() == null || config.getId().equals("")){
                 //新增配置(需要k，v，belong参数)
                 configInfoMapper.insert(config
-                        .setId(ApiUtil.getUUID())
+                        .setId(CommonUtil.getUUID())
                         .setVersion(1)
                         .setScope("public"));
             } else {
@@ -237,7 +238,7 @@ public class ServicesService {
             OmNodeMessage slave = nodeMessages.get(0);
             //向agent传达命令
             Map<String, Object> response = HttpUtil.sendPost(String.format(UrlMapping.REQUEST_COMMAND,slave.getIp(),slave.getPort())
-                    ,new NoticeModel().setTitle(order).setMessage(process).toString());
+                    ,new CommandModel().setCommand(order).setProcess(process).toString());
             OmOperationLog operationLog = null;
             if((Integer)response.get("code") == 200){
                 PairModel agentResponse = JSONObject.parseObject(response.get("content").toString(), PairModel.class);
@@ -281,7 +282,7 @@ public class ServicesService {
             OmNodeMessage slave = nodeMessages.get(0);
             //向agent传达命令
             Map<String, Object> response = HttpUtil.sendPost(String.format(UrlMapping.REQUEST_COMMAND,slave.getIp(),slave.getPort())
-                    ,new NoticeModel().setTitle(order).setMessage(processInfo.getProcess()).toString());
+                    ,new CommandModel().setCommand(order).setProcess(processInfo.getProcess()).toString());
             OmOperationLog operationLog = null;
             if((Integer)response.get("code") == 200){
                 PairModel agentResponse = JSONObject.parseObject(response.get("content").toString(), PairModel.class);

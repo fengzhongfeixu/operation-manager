@@ -36,8 +36,6 @@ import java.util.Set;
 @Api(tags = "RELEASE-1.0.0", description = "服务管理", value = "服务管理")
 public class ServicesController {
 
-    private static final ThreadLocal<SimpleDateFormat> threadLocal = new ThreadLocal<>();
-
     @Autowired
     private ServicesService servicesService;
 

@@ -164,27 +164,11 @@ public class ApiUtil {
     }
 
     /**
-     * 判断本机是不是windows系统
-     * @return
-     */
-    public static boolean isWindows() {
-        return System.getProperties().getProperty("os.name").toUpperCase().contains("WINDOWS");
-    }
-
-    /**
-     * 获取uuid
-     * @return
-     */
-    public static String getUUID(){
-        return UUID.randomUUID().toString().replaceAll("-","");
-    }
-
-    /**
      * 进程相关命令调用
      * @param order
      * @param process
      */
-    public static void processCommand(String order,String process,String hivePid) throws IOException, InterruptedException {
+    public static void processCommand(String order,String process,String pid) throws IOException, InterruptedException {
         if(order.equals("restart")){
             if(process.equals("ZKserver")){
                 executeCommand(Constant.ZOOKEEPER_HOME + File.separator + "bin" + File.separator + "zkServer.sh restart");
@@ -216,12 +200,12 @@ public class ApiUtil {
                 executeCommand(Constant.HADOOP_HOME + File.separator + "bin" + File.separator + "yarn --daemon stop timelineserver");
                 executeCommand(Constant.HADOOP_HOME + File.separator + "bin" + File.separator + "yarn --daemon start timelineserver");
             } else if (process.equals("metastore")){
-                executeCommand("kill -9 " + hivePid);
+                executeCommand("kill -9 " + pid);
                 executeCommand("nohup " + Constant.HIVE_HOME
                         + File.separator + "bin" + File.separator + "hive --service metastore > "
                         + Constant.HIVE_HOME + File.separator + "logs" + File.separator + "metastore.log 2>&1" + " &");
             } else if (process.equals("hiveserver2")){
-                executeCommand("kill -9 " + hivePid);
+                executeCommand("kill -9 " + pid);
                 executeCommand("nohup " + Constant.HIVE_HOME
                         + File.separator + "bin" + File.separator + "hive --service hiveserver2 > "
                         + Constant.HIVE_HOME + File.separator + "logs" + File.separator + "hiveserver2.log 2>&1" + " &");
@@ -299,9 +283,9 @@ public class ApiUtil {
             } else if (process.equals("timelineserver")){
                 executeCommand(Constant.HADOOP_HOME + File.separator + "bin" + File.separator + "yarn --daemon stop timelineserver");
             } else if (process.equals("metastore")){
-                executeCommand("kill -9 " + hivePid);
+                executeCommand("kill -9 " + pid);
             } else if (process.equals("hiveserver2")){
-                executeCommand("kill -9 " + hivePid);
+                executeCommand("kill -9 " + pid);
             } else if (process.equals("HMaster")){
                 executeCommand( Constant.HBASE_HOME + File.separator + "bin" + File.separator + "hbase-daemon.sh stop master");
             } else if (process.equals("HRegionServer")){
