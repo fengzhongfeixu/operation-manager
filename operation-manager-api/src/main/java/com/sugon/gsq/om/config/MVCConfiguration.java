@@ -17,7 +17,7 @@ public class MVCConfiguration implements WebMvcConfigurer {
         login.addPathPatterns("/**");
         login.excludePathPatterns("/user/login","/user/logout","/agent/**"
                 ,"/swagger-ui.html","/swagger-resources/**","/v2/**","/master/**");
-        master.addPathPatterns("/master/**");
+        master.addPathPatterns("/master/**","/user/**","/event/**","/monitor/**","/node/**","/service/**");
         agent.addPathPatterns("/agent/**");
     }
 
