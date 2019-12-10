@@ -35,10 +35,10 @@ public class LoginPowerInterceptor implements HandlerInterceptor {
                         .setMessage("You haven't signed in yet");
                 printWriter.write(result.toString());
                 return false;
-            }else{
+            } else {
                 return true;
             }
-        }else{
+        } else {
             return true;
         }
     }
