@@ -40,13 +40,20 @@ public class HttpUtil {
             HttpPost post = new HttpPost(url);
             httpClient = HttpClients.createDefault();
 
-            StringEntity se = new StringEntity(message, Charset.forName("utf-8"));
-            se.setContentEncoding("utf-8");
-            se.setContentType("application/json");
+            StringEntity se = null;
+
+            if(message != null){
+                se = new StringEntity(message, Charset.forName("utf-8"));
+                se.setContentEncoding("utf-8");
+                se.setContentType("application/json");
+            }
 
             post.addHeader(new BasicHeader("Content-Type", "application/json; charset=utf-8"));
             post.setHeader(new BasicHeader("Accept", "application/json; charset=utf-8"));
-            post.setEntity(se);
+
+            if(se != null){
+                post.setEntity(se);
+            }
 
             response = httpClient.execute(post);
             Integer statusCode = response.getStatusLine().getStatusCode();
