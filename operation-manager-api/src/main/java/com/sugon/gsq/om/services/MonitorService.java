@@ -28,20 +28,20 @@ import java.util.*;
 public class MonitorService {
 
     @Autowired
-    OmBlueprintProcessMapper omBlueprintProcessMapper;
-
-    @Autowired
     OmMonitorMessageMapper monitorMessageMapper;
 
     @Autowired
     ServicesService servicesService;
+
+    @Autowired
+    NodeService nodeService;
 
     public List<ServerEntity> getServersMessage(){
         return servicesService.getServersMessage();
     }
 
     public SoNodesHealthEntity getNodesHealthMessage(){
-        return new SoNodesHealthEntity(0.8,0.1,0.1);
+        return new SoNodesHealthEntity(nodeService.getNodeStatus(),1 - nodeService.getNodeStatus(),0);
     }
 
     public List<OmMonitorMessage> getMonitorChart(String index, Date startTime, Date endTime){

@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.weekend.Weekend;
 import tk.mybatis.mapper.weekend.WeekendCriteria;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -54,6 +55,24 @@ public class NodeService {
             }
         }
         return new PageInfo<>(nodes);
+    }
+
+    public double getNodeStatus(){
+        Weekend<OmNodeMessage> weekend = Weekend.of(OmNodeMessage.class);
+        WeekendCriteria<OmNodeMessage, Object> criteria = weekend.weekendCriteria();
+        criteria.andEqualTo("role","agent");
+        List<OmNodeMessage> nodes = nodeMessageMapper.selectByExample(weekend);
+        Double total = 0.0;
+        Double health = 0.0;
+        for(OmNodeMessage node : nodes){
+            Map<String,Object> response = HttpUtil.sendPost(String.format(UrlMapping.REQUEST_MESSAGE,node.getIp(),node.getPort()), null);
+            if((Integer)response.get("code") == 200){
+                health = health + 1;
+            }
+            total = total + 1;
+        }
+        BigDecimal b = new BigDecimal(health / total);
+        return b.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
     }
 
 }

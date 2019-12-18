@@ -12,7 +12,6 @@ import com.sugon.gsq.om.db.mapper.OmConfigInfoMapper;
 import com.sugon.gsq.om.db.mapper.OmMonitorMessageMapper;
 import com.sugon.gsq.om.db.mapper.OmOperationEventMapper;
 import com.sugon.gsq.om.db.mapper.OmProcessInfoMapper;
-import com.sugon.gsq.om.services.ServicesService;
 import com.sugon.gsq.om.tools.ApiUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -50,7 +49,7 @@ public class Report {
     private OmConfigInfoMapper configInfoMapper;
 
     //上报监控信息
-    @Scheduled(cron = "0 0,15,30,45 * * * ?")
+    @Scheduled(cron = "0 */1 * * * ?")
     public void reportSystemMessage() throws ParseException {
         //master节点不参与数据上报
         if(Constant.ROLE.equals(Constant.MASTER)){
@@ -110,6 +109,24 @@ public class Report {
         for(OmMonitorMessage omHealthStatus : omHealthStatuses){
             monitorMessageMapper.insert(omHealthStatus);
         }
+    }
+
+    @Scheduled(cron = "0 0 1 * * ?")
+    public void deleteMessage(){
+        if(Constant.ROLE.equals(Constant.AGENT)){
+            return;
+        }
+        //计算前一个月
+        Calendar c = Calendar.getInstance();
+        c.setTime(new Date());
+        c.add(Calendar.MONTH, -1);
+        Date m = c.getTime();
+        String mon = format.format(m);
+        //删除前一个月数据
+        Weekend<OmMonitorMessage> weekend = Weekend.of(OmMonitorMessage.class);
+        WeekendCriteria<OmMonitorMessage, Object> criteria = weekend.weekendCriteria();
+        criteria.andGreaterThan("time", mon);
+        Integer num = monitorMessageMapper.deleteByExample(weekend);
     }
 
     //检查hadoop进程
